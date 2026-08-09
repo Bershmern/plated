@@ -1,0 +1,14 @@
+{
+  "projectId": "4ed69c55-becf-416a-a2ad-700331fe99b5",
+  "type": "frontend",
+  "name": "Diner — Select dish options and manage cart",
+  "description": "A diner selects customizable options for a dish, adds it to cart, adjusts quantities, and verifies running cart totals.",
+  "priority": "p0",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the venue scan page at /scan?outlet_id=demo-outlet&table=4" },
+    { "type": "action", "description": "Click on a customizable dish item to open its options accordion" },
+    { "type": "action", "description": "Select required option group choices (e.g. Spice Level or Side Dish)" },
+    { "type": "action", "description": "Click Add to Cart" },
+    { "type": "assertion", "description": "Verify the floating cart button updates to show 1 item with the correct subtotal in Naira" }
+  ]
+}

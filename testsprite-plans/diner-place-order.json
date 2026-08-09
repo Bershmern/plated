@@ -1,0 +1,14 @@
+{
+  "projectId": "4ed69c55-becf-416a-a2ad-700331fe99b5",
+  "type": "frontend",
+  "name": "Diner — Submit order to table session tab",
+  "description": "A diner reviews cart items, submits an order to the table session without logging in, and views the live order confirmation status.",
+  "priority": "p0",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to /scan?outlet_id=demo-outlet&table=4" },
+    { "type": "action", "description": "Add an item to the cart" },
+    { "type": "action", "description": "Click the View Cart button to open the order summary drawer" },
+    { "type": "action", "description": "Click Submit Order to send the order to the counter" },
+    { "type": "assertion", "description": "Verify the order status screen appears showing Status: Incoming, Table Number, and the list of ordered items with prices" }
+  ]
+}

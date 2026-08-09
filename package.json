@@ -1,0 +1,26 @@
+{
+  "name": "plated",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Plated — QR table-ordering SaaS for small restaurant chains in Nigeria",
+  "packageManager": "pnpm@9.12.3",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "db:diff": "pnpm --filter @plated/db db:diff",
+    "db:push": "pnpm --filter @plated/db db:push",
+    "db:types": "pnpm --filter @plated/db db:types"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "turbo": "^2.1.3",
+    "typescript": "^5.6.3"
+  }
+}

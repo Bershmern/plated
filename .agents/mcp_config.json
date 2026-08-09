@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
+    },
+    "Figma Desktop": {
+      "url": "https://mcp.figma.com/mcp"
+    }
+  }
+}

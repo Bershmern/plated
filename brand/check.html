@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Plated — mark check</title>
+<style>
+  :root{--ink:#16110E;--linen:#F1E8DB;--porcelain:#FFFDF9;--chalk:#EDE4D9;
+        --graphite:#33261F;--brass:#B08D57}
+  body{margin:0;font:14px/1.4 ui-sans-serif,system-ui;background:var(--linen);color:var(--graphite)}
+  .row{display:flex;flex-wrap:wrap}
+  .p{flex:1 1 320px;padding:40px;display:flex;flex-direction:column;gap:20px;align-items:center;justify-content:center;min-height:300px}
+  .dark{background:var(--ink);color:var(--chalk)}
+  .lin{background:var(--linen)}
+  .por{background:var(--porcelain)}
+  .bad{background:var(--linen);color:var(--brass)}
+  svg{height:96px;width:auto;display:block}
+  .sizes{display:flex;gap:28px;align-items:flex-end}
+  .sizes svg:nth-child(1){height:40px}
+  .sizes svg:nth-child(2){height:28px}
+  .sizes svg:nth-child(3){height:24px}
+  .sizes svg:nth-child(4){height:20px}
+  .tag{font:500 11px/1 ui-monospace,monospace;letter-spacing:.08em;opacity:.55}
+  h2{font:500 12px/1 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;opacity:.5;margin:0}
+</style>
+<div class="row">
+  <div class="p dark"><h2>chalk on ink — 14.9:1</h2><div id="a"></div><div class="tag">POWERED BY PLATED</div></div>
+  <div class="p lin"><h2>graphite on linen — 12.0:1</h2><div id="b"></div></div>
+  <div class="p por"><h2>graphite on porcelain — 14.4:1</h2><div id="c"></div></div>
+  <div class="p bad"><h2>brass on linen — 2.55:1, rejected</h2><div id="d"></div></div>
+  <div class="p dark"><h2>40 / 28 / 24 / 20px — floor is 24</h2><div class="sizes" id="e"></div></div>
+</div>
+<script>
+fetch('plated-mark.svg').then(r=>r.text()).then(s=>{
+  for (const id of ['a','b','c','d']) document.getElementById(id).innerHTML = s;
+  document.getElementById('e').innerHTML = s.repeat(4);
+});
+</script>

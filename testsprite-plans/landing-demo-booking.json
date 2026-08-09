@@ -1,0 +1,13 @@
+{
+  "projectId": "4ed69c55-becf-416a-a2ad-700331fe99b5",
+  "type": "frontend",
+  "name": "Landing Page — Product positioning and demo booking",
+  "description": "A prospective restaurant client lands on the marketing site, views USPs and pricing, and fills out the demo booking form.",
+  "priority": "p1",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the landing home page at /" },
+    { "type": "action", "description": "Scroll through the primary USP sections highlighting 520ms landing animation and loginless cross-outlet recognition" },
+    { "type": "action", "description": "Click the Book a Demo call-to-action button" },
+    { "type": "assertion", "description": "Verify the demo request form displays fields for Restaurant Name, Outlet Count, and Contact Phone/Email" }
+  ]
+}

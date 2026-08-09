@@ -1,0 +1,13 @@
+{
+  "projectId": "4ed69c55-becf-416a-a2ad-700331fe99b5",
+  "type": "frontend",
+  "name": "Diner — Scan QR code and browse menu items",
+  "description": "A diner scans a venue QR code, arrives at the table menu, views available dishes, and filters by category.",
+  "priority": "p0",
+  "planSteps": [
+    { "type": "action", "description": "Navigate to the venue scan page at /scan?outlet_id=demo-outlet&table=4" },
+    { "type": "action", "description": "Scroll down through the dish rail to browse available menu items" },
+    { "type": "action", "description": "Click on a category filter tab such as Mains or Drinks" },
+    { "type": "assertion", "description": "Verify the venue welcome header displays the restaurant name and table number, and the dish list displays prices formatted in whole Naira (e.g. ₦4,500)" }
+  ]
+}
