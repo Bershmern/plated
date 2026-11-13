@@ -1,38 +1,44 @@
+
+
 :root {
-  /* Ground & Typography Palette — Modern Blueish / Blackish / Off-Whitish Theme */
-  --ink: #0B0F19;           /* Deepest Midnight Blue-Black background */
-  --surface-dark: #111827;    /* Secondary surface (Slate 900) */
-  --surface-card: #1E293B;    /* Card & Modal surface (Slate 800) */
-  --surface-hover: #334155;   /* Surface hover state (Slate 700) */
-  
-  --porcelain: #0F172A;     /* Primary container background */
-  --linen: #1E293B;         /* Borders & dividers */
-  --chalk: #F8FAFC;         /* Crisp off-white primary text */
-  --graphite: #E2E8F0;      /* Secondary text on dark surfaces */
-  --slate: #94A3B8;         /* Muted / disabled text (Slate 400) */
-  
-  /* Brand Accent Tokens — Blueish Focus */
-  --accent: #3B82F6;        /* Electric Blue primary accent */
-  --accent-hover: #2563EB;  /* Deep Royal Blue hover state */
-  --accent-ink: #FFFFFF;    /* Text on primary accent button */
-  --accent-wash: rgba(59, 130, 246, 0.12);
-  --accent-glow: rgba(59, 130, 246, 0.25);
-  
-  /* Support Status Tokens */
-  --ok: #10B981;            /* Active / Open / In-Stock Emerald Green */
-  --alert: #EF4444;         /* Out of Stock / Cancelled Crimson */
-  
-  /* Motion & Easing Specs */
-  --ease-landing: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out-smooth: cubic-bezier(0.22, 1, 0.36, 1);
-  --duration-landing: 520ms;
+  /* Foundation Primitives - HSL channels for Tailwind opacity support */
+  --plated-orange: 23 97% 46%; /* #E85D04 */
+  --plated-orange-dark: 23 97% 40%; /* #C94F03 */
+  --plated-black: 0 0% 9%; /* #171717 */
+  --plated-ivory: 34 100% 97%; /* #FFF8F0 */
+  --plated-white: 0 0% 100%; /* #FFFFFF */
+
+  /* Semantic Tokens: Action / Brand */
+  /* --action-primary can be overridden via inline styles for White-Labelling */
+  --action-primary: var(--plated-orange);
+  --action-primary-hover: var(--plated-orange-dark);
+
+  /* Semantic Tokens: Text */
+  --text-primary: var(--plated-black);
+
+  /* Semantic Tokens: Surface */
+  --surface-primary: var(--plated-ivory);
+  --surface-secondary: var(--plated-white);
+
+  /* Radius */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 999px;
+
+  /* Base Font */
+  --font-sans: "var(--font-sans)", system-ui, sans-serif;
 }
 
+/* Apply base surface and text colors */
 body {
-  background-color: var(--ink);
-  color: var(--chalk);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
-  margin: 0;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
+  background-color: hsl(var(--surface-primary));
+  color: hsl(var(--text-primary));
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+* {
+  border-color: hsl(var(--text-primary) / 0.12);
 }

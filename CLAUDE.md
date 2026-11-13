@@ -1,122 +1,57 @@
 # CLAUDE.md
 
-**Plated** — a QR table-ordering SaaS for small restaurant chains in Nigeria. A
-diner scans the code on their table, browses an animated menu, and submits an
-order. Staff read orders off a tablet at the counter. The diner pays at the
-counter.
+**Plated** — a QR-code ordering SaaS for restaurants in Nigeria. A diner scans the code at their table (or accesses pickup/delivery links), browses an animated menu where dishes land on a virtual table stage, and submits an order. Staff receive the order on a counter tablet, print kitchen tickets/receipts, and the diner pays either online (Moniepoint) or offline at the counter.
 
-**Read the relevant `/docs` file before writing code.** This file routes; it does
-not restate. Where this file and a `/docs` file disagree, `/docs` wins.
+**Read the relevant `/docs` file before writing code.** This file routes; it does not restate. Where this file and a `/docs` file disagree, `/docs` wins.
 
-## Primary USP & Core Feature
+**CRITICAL RULE:** Read `PLANNING_RULES.md` first. You MUST plan, evaluate, and explicitly wait for user approval before making any code changes or implementations.
 
-Both are defined in `PRD.md` and quoted, never paraphrased:
+## Primary USPs
 
-1. **Primary Locked USP — The landing animation.** Dishes animate onto a lit table as the diner
-   swipes. Non-negotiable on quality — this is the visual hook, and a restaurant owner
-   should react to it before anything is explained.
-2. **Core Feature — Loginless cross-outlet recognition.** History is keyed on
-   `(device, chain)`. It pools across every outlet of one chain and never crosses
-   between brands. No account, no login, nothing to sign into.
+Defined in `PRD.md` and locked:
 
-## Stack
+1. **USP 1 — Animated Ordering Experience**: Dishes animate onto a rendered table stage as the diner swipes. Non-negotiable on visual quality — this is the primary visual hook.
+2. **USP 2 — Complete White-Labelling**: Custom brand logo, primary/secondary color hexes, and curated restaurant typography (*Inter, Plus Jakarta Sans, Outfit, Playfair Display, Space Grotesk, Cormorant Garamond*).
+
+## Stack & Pricing
 
 | Layer | Choice |
 |---|---|
 | Framework | Next.js App Router + TypeScript |
-| Styling | Tailwind, tokens from `DESIGN_SYSTEM.md` as CSS custom properties |
+| Styling | Tailwind CSS + Whitelabel CSS Custom Properties |
 | Animation | Framer Motion |
 | Database | Supabase Postgres |
-| Server logic | Supabase Edge Functions (Deno) |
-| Hosting | Vercel (four projects) + Supabase cloud |
-| Payments | None in MVP. The diner pays at the counter. |
+| Server Logic | Supabase Edge Functions (Deno) |
+| Hosting | Vercel (four projects) + Supabase Cloud |
+| Payments | Online via **Moniepoint** (0.5% auto-split) or Offline at Counter |
+| Pricing | **₦10,000/month** subscription + **₦50,000** setup fee + **0.5%** transaction fee |
 
-## The four surfaces
+## The Four Surfaces
 
 | App | Who | Auth |
 |---|---|---|
-| `apps/diner` | The diner, on their own phone. PWA. | None — device identity only |
-| `apps/restaurant` | Counter and manager, **one codebase, two roles** | Login, role + outlet scope |
-| `apps/internal` | Our team, platform-wide | Separate auth tier |
-| `apps/landing` | Prospective clients | Public |
+| `apps/diner` | Diners (on mobile browser). Supports Dine-in, Pickup, Delivery. | None — device identity only |
+| `apps/restaurant` | Counter and Manager, **one codebase, two roles** | Login, role + outlet scope |
+| `apps/internal` | Company ops team, platform-wide governance | Separate restricted auth tier |
+| `apps/landing` | Prospective client restaurant owners | Public |
 
-## Where to look
+## Where to Look
 
 | Question | File |
 |---|---|
-| What are we building and why; what is out of scope; pricing | `docs/PRD.md` |
+| What are we building; USPs; pricing; payment & fulfillment | `docs/PRD.md` |
 | Locked decision log and date history | `docs/DECISIONS.md` |
-| Schema, device identity, the two USP 2 queries, tenancy | `docs/ARCHITECTURE.md` |
-| Tokens, type, the 520ms landing spec, performance floor | `docs/DESIGN_SYSTEM.md` |
-| Endpoints, request and response shapes, error codes | `docs/API_CONTRACTS.md` |
-| What phase we are in and what "done" means for it | `docs/ROADMAP.md` |
-| Positioning, landing copy, what we do not claim | `docs/MARKETING.md` |
+| Schema, Moniepoint integration, tenancy, whitelabel CSS | `docs/ARCHITECTURE.md` |
+| Design tokens, animation specs, font pairings | `docs/DESIGN_SYSTEM.md` |
+| Endpoints, request/response contracts, Moniepoint webhooks | `docs/API_CONTRACTS.md` |
+| Implementation phases and exit criteria | `docs/ROADMAP.md` |
+| Marketing positioning, pricing copy, demo booking | `docs/MARKETING.md` |
 
-## Vocabulary
+## Key Rules & Conventions
 
-A **chain** is the paying client account. Its venues are **outlets**. There is no
-`restaurants` table — `apps/restaurant` is the app a restaurant's staff use, and
-that name says nothing about the schema. `chain_id` is the tenant boundary and it
-is on every row that is not global.
-
-A **tab** is a `table_sessions` row: every order from one table, accumulating into
-one bill. Orders belong to a session; the session is what gets settled.
-
-## Things that are easy to get wrong
-
-- **Money is `bigint` in kobo**, columns suffixed `_minor`, never `_cents`, never
-  float. The server computes every total; requests never carry prices. Diners see
-  whole naira — `₦4,500`, never `₦4,500.00` and never `450000`.
-- **The server owns identity and the tab.** No `device_id` and no `session_id` in
-  a request body. Identity comes from the cookie; the tab is resolved from
-  `(outlet_id, table_label)`.
-- **Two lifecycles, two tables.** `orders.status` is
-  `incoming|processing|delivered|cancelled` (fulfilment). `table_sessions.status` is
-  `open|settled|void` (payment tab). An order cancellation with reason `wasted` is strictly
-  gated to orders cancelled during/after `Processing`. A session is settled when payment is collected.
-- **`POST /orders` is idempotent or it is broken.** `Idempotency-Key` is
-  mandatory, unique on `(outlet_id, idempotency_key)`, and a replay returns `200`
-  with the original order. The offline queue depends on this.
-- **`recognition` is strictly `null`** when we don't know a diner. No greeting,
-  no empty state, no prompt to sign in. Silence is the specified behaviour. The
-  venue welcome — "Café Neo · Table 4" — is a different component and shows for
-  everyone.
-- **A missing `outlet_menu_items` row means listed and in stock.** Every read
-  `LEFT JOIN`s and `COALESCE`s to `true`, so a new outlet inherits the chain menu
-  with zero rows written.
-- **Unavailable items stay visible.** "No Stock" and "No Product" are rendered
-  unlit and unorderable, never hidden or skipped.
-- **Nothing is deleted for retention.** Order rows are the restaurant's business
-  records. What expires is the device→order link, via
-  `chains.recognition_window_days`. The daily reset is a view filter, and an open
-  tab survives it.
-- **Only `transform` and `opacity` animate.** Anything animating `box-shadow`,
-  `filter`, `width`, or `background` per frame is a bug, not a preference. The one
-  exception is the options accordion's height, bounded as `DESIGN_SYSTEM.md` §6.6
-  specifies.
-- **Reorder rows resolve against the current outlet's live menu.** Order
-  snapshots are for the receipt and the counter log; the only snapshot the
-  reorder flow may read is `name_snapshot`, as a label fallback.
-- **A suspended chain looks closed, not unpaid.** One `is_open` flag, and the
-  diner payload never says which cause fired.
-- **Printing is tablet-local and has no endpoint.** The tablet drives the printer;
-  the server is never in the path. `print_jobs` is insert-only and its status is
-  `sent`, never `printed`, because there is no paper sensor to read. Reprint is on
-  every card in the queue at all times and is never gated on the log.
-- **A chain gets one hue, not a palette.** White-labelling is a logo, a display
-  name, and one accent colour validated at ingest. `logo_mono_url` is derived for
-  the 58mm printer, never uploaded.
-- **Our mark is `currentColor` and belongs on three surfaces.** `apps/landing`,
-  `apps/internal`, and print. In the diner and restaurant apps our name appears
-  once, as the words `POWERED BY PLATED` — no mark, and the installed PWA icon is
-  the chain's logo, not ours. Fill is `--chalk` on `--ink` or `--graphite` on
-  light. Never `--brass`, never a chain's accent, never `#FFF`
-  (`DESIGN_SYSTEM.md` §3.3).
-
-## Order of work
-
-`ROADMAP.md` fixes the phase order and it is not negotiable. The rule that
-governs it: **do not build Phase 4 or later before Phase 2 works and looks
-good.** Phases 1 and 2 are allowed to be narrow — one chain, one outlet.
-
-Current phase: **0 — docs and scaffolding.**
+- **Money is `bigint` in kobo**, columns suffixed `_minor`, never float. Diners see whole Naira (`₦4,500`).
+- **Platform Fee is 0.5%** of order total (`platform_fee_minor`), split automatically via Moniepoint.
+- **Two Lifecycles**: `orders.status` (`incoming|processing|ready|delivered|completed|cancelled`) and `orders.payment_status` (`pending|paid|failed`).
+- **Diner Identity**: Silent recognition `(device, chain)` displaying greeting *"This is your X order with us!"*. No account required.
+- **Manager Capabilities**: Menu CRUD, stock availability toggles, Moniepoint details, internal notifications, analytics, **Whitelabel theme settings**.
+- **Counter Capabilities**: Live order feed, 6 AM daily reset, ESC/POS ticket printing, **confirm counter payment** (cash/POS/transfer), stock toggles.

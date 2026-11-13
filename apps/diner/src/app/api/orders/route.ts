@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { createServerClient } from '../../../lib/supabase-server';
+import { createServerClient } from '../../../lib/supabaseServer';
 
 // ─── POST /api/orders — Place a new order ────────────────────────────────────
 export async function POST(request: NextRequest) {
@@ -15,11 +15,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { outlet_id, table_label, items, client_created_at } = body;
+    const { outlet_id, table_label, items, client_created_at, fulfillment_type, customer_name, customer_phone, delivery_address } = body;
 
-    if (!outlet_id || !table_label || !Array.isArray(items) || items.length === 0) {
+    if (!outlet_id || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { error: { code: 'bad_request', message: 'Invalid order payload: outlet_id, table_label, and items required' } },
+        { error: { code: 'bad_request', message: 'Invalid order payload: outlet_id and items required' } },
         { status: 400 }
       );
     }
@@ -51,10 +51,14 @@ export async function POST(request: NextRequest) {
     const { data: rpcRes, error: rpcErr } = await supabase.rpc('place_order_transaction', {
       p_device_id: deviceId,
       p_outlet_id: outlet_id,
-      p_table_label: table_label,
+      p_table_label: table_label || null,
       p_client_created_at: client_created_at || new Date().toISOString(),
       p_idempotency_key: idempotencyKey,
       p_items: items,
+      p_fulfillment_type: fulfillment_type || 'dine_in',
+      p_customer_name: customer_name || null,
+      p_customer_phone: customer_phone || null,
+      p_delivery_address: delivery_address || null,
     });
 
     if (rpcErr) {

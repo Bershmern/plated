@@ -140,6 +140,10 @@ serve(async (req: Request) => {
         p_client_created_at: body.client_created_at || new Date().toISOString(),
         p_idempotency_key: idempotencyKey,
         p_items: body.items,
+        p_fulfillment_type: body.fulfillment_type || 'dine_in',
+        p_customer_name: body.customer_name || null,
+        p_customer_phone: body.customer_phone || null,
+        p_delivery_address: body.delivery_address || null,
       });
 
       if (rpcErr) {

@@ -109,45 +109,19 @@ different depths, which reads as broken rather than as unfinished. The manager's
 *upload UI* is Phase 4; the processing path that produces a compliant asset is
 here, even if we run it by hand.
 
-## Phase 3 — Cross-outlet recognition
+## Phase 3 — White-Labelling & Moniepoint Payments
 
-USP 2 end to end. Needs at least two outlets under one chain and one outlet
-under a second chain — the second chain is not optional, because without it the
-silo cannot be observed and a bug that pools history across brands looks exactly
-like success.
+USP 2 (Complete White-Labelling) and Moniepoint Payment Engine end to end.
 
-- [ ] Seed a second outlet on chain A and one outlet on chain B
-- [ ] `diner_profiles` written inside the order transaction, first order only
-- [ ] The §6 recognition lookup wired into `/scan`, bounded by
-      `chains.recognition_window_days`
-- [ ] The §7 resolution query, with the NO PRODUCT → NO STOCK → orderable
-      state machine
-- [ ] `recognition` in the `/scan` payload, strictly `null` when unrecognised
-- [ ] Greeting ribbon, reorder row, and the 940ms sequence from
-      `DESIGN_SYSTEM.md` §6.5
-- [ ] Unavailable rendering per §6.4 — visible, unlit, unorderable
-- [ ] Cookie lifetime verified on physical iOS and Android
-      (`ARCHITECTURE.md` §11.1)
+- [ ] Manager Whitelabel settings in `apps/restaurant`: Logo upload, primary/secondary color hex picker, and curated restaurant web font selector (*Inter, Plus Jakarta Sans, Outfit, Playfair Display, Space Grotesk, Cormorant Garamond*)
+- [ ] CSS Custom Property injection on `apps/diner` applying the chain's colors and selected font dynamically
+- [ ] **Moniepoint Online Payment Integration**: Edge Function handling `/payments/moniepoint/initialize` with automated **1% platform fee split** (`platform_fee_minor` added to customer total)
+- [ ] Moniepoint webhook endpoint updating `orders.payment_status` to `paid`
+- [ ] Counter staff payment confirmation RPC for offline payments (Cash / POS / Transfer)
+- [ ] **Silent Diner Recognition**: Greeting banner surfacing *"Welcome back! This is your X order with us."* across dine-in, pickup, and delivery
+- [ ] Silence on unrecognised diners — no greeting banner, no empty state
 
-**Exit criteria — the three acceptance tests in `PRD.md`, run on real phones,
-not in a seeded database:**
-
-| Test | Pass condition |
-|---|---|
-| Chidi | Orders at outlet A1, scans at A2 on the same phone → sees his A1 order, greeted with count 1 |
-| Aisha | Orders at A1, scans at chain B → sees **nothing**. No greeting, no empty state, no prompt |
-| Tunde | Has profiles at A and B → each scan surfaces exactly one chain's history, never both |
-
-Plus three degraded paths that are part of the contract, not edge cases:
-
-- Clear `localStorage` only → identity survives on the cookie.
-- Clear cookies only → identity is rebuilt from the mirror, same `device_id`.
-- Age an order past the recognition window → greeting still fires with the count,
-  no reorder row beneath it (`ARCHITECTURE.md` §8).
-
-**Do not ship a "sign in to see your history" affordance if recognition fails.**
-Silence is the specified behaviour. A fallback prompt would contradict
-`PRD.md` and would train diners to expect an account.
+**Exit criteria.** A manager selects "Plus Jakarta Sans" and `#1A4D2E` primary color; a diner scanning 30 seconds later sees the diner PWA styled completely in the restaurant's brand identity. A diner completes an online order via Moniepoint and the 1% fee split lands in Plated's account. A returning diner is greeted with their order count.
 
 ## Phase 4 — Restaurant app
 
@@ -177,7 +151,7 @@ operates, and it is the difference between a demo and a deployment.
 - [ ] **Manager:** per-outlet availability toggles writing `outlet_menu_items`,
       including `restock_at`
 - [ ] **Manager:** chain accent editor going through the Edge Function carve-out —
-      3:1 validation and computed `accent_ink` (`API_CONTRACTS.md` §7.4)
+      3:1 contrast validation against `surface-primary` (`API_CONTRACTS.md` §7.4)
 - [ ] Realtime on the order feed for staff, which unlocks
       `API_CONTRACTS.md` §9.1 for the diner side
 
@@ -237,8 +211,7 @@ something slightly different from what shipped.
 - [ ] Above the fold: the landing itself, running, not a screenshot of it
 - [ ] Demo footage captured on the target device class, not a desktop recording
 - [ ] USP 2 told as the Chidi walk — one device, two outlets, no login
-- [ ] Pricing stated plainly: ₦500,000 / ₦250,000 setup and ₦50,000 per outlet
-      monthly, no curve (`PRD.md` § Business model)
+- [ ] Pricing stated plainly: ₦20,000/month subscription + ₦100,000 setup fee + 1% convenience fee (`PRD.md` § Business model)
 - [ ] One conversion path — book a demo. No self-serve trial; onboarding needs a
       menu and photography, and neither self-serves yet.
 

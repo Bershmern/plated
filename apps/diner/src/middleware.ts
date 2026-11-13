@@ -3,15 +3,17 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const response = NextResponse.next();
-  const existingCookie = request.cookies.get('__Host-dt')?.value;
+  const isSecure = process.env.NODE_ENV === 'production' || request.nextUrl.protocol === 'https:';
+  const cookieName = isSecure ? '__Host-dt' : 'dt';
+  const existingCookie = request.cookies.get(cookieName)?.value;
 
   let deviceToken = existingCookie;
   if (!deviceToken) {
     deviceToken = crypto.randomUUID();
-    // Set __Host-dt cookie (Secure, SameSite=Lax, 1-year maxAge)
-    response.cookies.set('__Host-dt', deviceToken, {
+    // Set cookie dynamically based on environment
+    response.cookies.set(cookieName, deviceToken, {
       path: '/',
-      secure: process.env.NODE_ENV === 'production',
+      secure: isSecure,
       sameSite: 'lax',
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 365,

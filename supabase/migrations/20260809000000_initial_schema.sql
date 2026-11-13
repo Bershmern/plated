@@ -14,6 +14,9 @@ create table public.chains (
   status text not null default 'active' check (status in ('active', 'suspended')),
   cancel_window text not null default 'incoming_only' check (cancel_window in ('incoming_only', 'through_processing')),
   recognition_window_days int not null default 90,
+  monnify_api_key text,
+  monnify_secret_key text,
+  monnify_contract_code text,
   created_at timestamptz not null default now()
 );
 
@@ -125,9 +128,13 @@ create table public.orders (
   id uuid primary key default gen_random_uuid(),
   chain_id uuid not null references public.chains(id) on delete cascade,
   outlet_id uuid not null references public.outlets(id) on delete cascade,
-  session_id uuid not null references public.table_sessions(id) on delete cascade,
+  session_id uuid references public.table_sessions(id) on delete cascade, -- Optional for pickup/delivery
   diner_profile_id uuid not null references public.diner_profiles(id) on delete cascade,
-  status text not null default 'incoming' check (status in ('incoming', 'processing', 'delivered', 'cancelled')),
+  fulfillment_type text not null default 'dine_in' check (fulfillment_type in ('dine_in', 'pickup', 'delivery')),
+  customer_name text,
+  customer_phone text,
+  delivery_address text,
+  status text not null default 'incoming' check (status in ('incoming', 'processing', 'ready', 'delivered', 'cancelled')),
   cancel_reason text check (cancel_reason in ('cancelled', 'wasted', 'other')),
   cancel_note text,
   cancelled_by uuid,
@@ -195,7 +202,7 @@ create table public.platform_users (
   is_active boolean not null default true
 );
 
--- 17. SUBSCRIPTIONS (With Paystack customer fields)
+-- 17. SUBSCRIPTIONS (With Moniepoint customer fields)
 create table public.subscriptions (
   id uuid primary key default gen_random_uuid(),
   chain_id uuid not null references public.chains(id) on delete cascade,
@@ -204,9 +211,9 @@ create table public.subscriptions (
   retainer_minor bigint not null,
   outlet_count int not null default 1,
   status text not null default 'active' check (status in ('active', 'past_due', 'suspended')),
-  paystack_customer_id text,
-  paystack_subscription_code text,
-  paystack_email text,
+  moniepoint_customer_id text,
+  moniepoint_subscription_code text,
+  moniepoint_email text,
   current_period_start timestamptz not null,
   current_period_end timestamptz not null,
   grace_until timestamptz,

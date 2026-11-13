@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss';
+import sharedConfig from '../../packages/ui/tailwind.config';
 
 const config: Config = {
+  presets: [sharedConfig],
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,27 +11,6 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      colors: {
-        ink: 'var(--ink)',
-        'surface-dark': 'var(--surface-dark)',
-        'surface-card': 'var(--surface-card)',
-        'surface-hover': 'var(--surface-hover)',
-        linen: 'var(--linen)',
-        porcelain: 'var(--porcelain)',
-        chalk: 'var(--chalk)',
-        graphite: 'var(--graphite)',
-        slate: 'var(--slate)',
-        brass: '#3B82F6', // Brand Electric Blue accent
-        ok: 'var(--ok)',
-        alert: 'var(--alert)',
-        accent: {
-          DEFAULT: 'var(--accent)',
-          hover: 'var(--accent-hover)',
-          ink: 'var(--accent-ink)',
-          wash: 'var(--accent-wash)',
-          glow: 'var(--accent-glow)',
-        },
-      },
       transitionTimingFunction: {
         landing: 'var(--ease-landing)',
         'out-smooth': 'var(--ease-out-smooth)',

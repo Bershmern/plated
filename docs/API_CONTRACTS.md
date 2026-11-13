@@ -122,7 +122,7 @@ GET /fn/v1/scan?outlet=<outlet_slug>&t=<table_label>
   "device": { "token": "v1.…", "is_new": false },
   "chain":  { "id": "…", "name": "Chicken Republic",
               "display_name": "Chicken Republic", "logo_url": "…",
-              "accent": "#D2402E", "accent_ink": "#FFFDF9" },
+              "primary_color_hex": "#D2402E" },
   "outlet": { "id": "…", "slug": "chicken-republic-lekki",
               "name": "Chicken Republic Lekki",
               "is_open": true, "timezone": "Africa/Lagos",
@@ -153,13 +153,13 @@ GET /fn/v1/scan?outlet=<outlet_slug>&t=<table_label>
 }
 ```
 
-`accent` and `accent_ink` come straight off the chain record — already
+`primary_color_hex` comes straight off the chain record — already
 validated and corrected at write time per `DESIGN_SYSTEM.md` §3, so the client
 injects them as CSS custom properties without checking contrast. `accent_wash`
 and `accent_glow` are alpha derivations the client computes; they are not sent.
 
 **These four fields are the whole of the white label.** `display_name`,
-`logo_url`, `accent` and `accent_ink` are everything a chain controls in the
+`logo_url` and `primary_color_hex` are everything a chain controls in the
 diner app, and they are everything the diner app needs to read as the
 restaurant's own tool rather than ours. The ground palette is not on the wire
 and is not uploadable — `DESIGN_SYSTEM.md` §3 fixes it, because a chain that
@@ -536,11 +536,10 @@ tenant's operational data.
 
 ### 7.4 Writes that must not go through PostgREST
 
-**The chain accent.** `DESIGN_SYSTEM.md` §3 requires a 3:1 contrast check
-against `--porcelain`, correction along the same hue on failure, and a computed
-`accent_ink`. A direct table write would store an unvalidated hex and the diner
-app trusts these columns without checking (§4). Accent changes go through an
-Edge Function that validates, corrects, and writes both columns together.
+**The chain accent.** `DESIGN_SYSTEM.md` §1 requires a 3:1 contrast check
+against `--surface-primary`, correction along the same hue on failure. A direct table write would store an unvalidated hex and the diner
+app trusts these columns without checking. Accent changes go through an
+Edge Function that validates and writes the column.
 
 **Anything that touches `orders` totals.** Staff can move `status`; nothing in
 either dashboard recomputes money. The order is a receipt.
@@ -673,8 +672,8 @@ Fired by `apps/landing` when a prospective client submits the "Get a Quote" ques
 { "success": true, "quote_id": "00000000-0000-0000-0000-000000000001" }
 ```
 
-### 10.2 Paystack Subscription Webhook (`POST /api/webhooks/paystack`)
-Handled by Supabase Edge Function to process SaaS retainer renewals. Signed with Paystack HMAC SHA512 header (`x-paystack-signature`).
+### 10.2 Moniepoint Subscription Webhook (`POST /api/webhooks/moniepoint-subscription`)
+Handled by Supabase Edge Function to process SaaS retainer renewals. Signed with Moniepoint HMAC header (`x-moniepoint-signature`).
 
 ```json
 // Event: subscription.create / charge.success
@@ -706,3 +705,54 @@ Read by `apps/restaurant` to surface platform broadcast notifications sent from 
   ]
 }
 ```
+
+### 10.4 Moniepoint Online Checkout & Webhook
+
+#### `POST /payments/moniepoint/initialize`
+Initializes online diner checkout with automated **1% fee split** (passed to customer) to Plated's account.
+
+```json
+// Request Body
+{
+  "order_id": "00000000-0000-0000-0000-000000000001",
+  "customer_email": "diner@example.com",
+  "customer_phone": "+2348012345678"
+}
+
+// Response 200 OK
+{
+  "success": true,
+  "moniepoint_reference": "MNP_REF_987654321",
+  "checkout_url": "https://checkout.moniepoint.com/pay/MNP_REF_987654321",
+  "total_minor": 450000,
+  "platform_fee_minor": 2250
+}
+```
+
+#### `POST /payments/moniepoint/webhook`
+Moniepoint webhook confirming payment completion. Signed with Moniepoint HMAC signature. Updates `orders.payment_status` to `paid`.
+
+---
+
+### 10.5 Manager Whitelabel Settings (`PATCH /restaurant/manager/whitelabel`)
+Executed by Manager in `apps/restaurant` to configure the chain's brand styling across `apps/diner`.
+
+```json
+// Request Body
+{
+  "primary_color_hex": "#1A4D2E",
+  "secondary_color_hex": "#E8F5E9",
+  "typography_font": "Plus Jakarta Sans",
+  "logo_url": "https://storage.plated.ng/logos/chain_123.png"
+}
+
+// Response 200 OK
+{
+  "success": true,
+  "chain_id": "00000000-0000-0000-0000-000000000001",
+  "primary_color_hex": "#1A4D2E",
+  "secondary_color_hex": "#E8F5E9",
+  "typography_font": "Plus Jakarta Sans"
+}
+```
+

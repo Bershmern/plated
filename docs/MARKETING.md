@@ -41,22 +41,17 @@ Three things about this reader shape the copy:
 
 One sentence, and everything else on the page is evidence for it:
 
-> **The QR menu your regulars recognise, and your first-timers remember.**
+> **The QR ordering system tailored to your restaurant's brand — with animated food visuals, complete white-labelling, and flexible online/offline payments.**
 
-The second clause is USP 1, the first is USP 2, in the order an owner cares
-about — a returning customer is money they can picture, and the animation is
-what they will actually feel while reading.
+The first clause is USP 1, the second is USP 2, in the order an owner cares about — their own brand identity powered by Plated's visual hook.
 
-Said plainly: a QR table-ordering app that looks like the food, and that
-remembers a diner across every outlet you run without asking them to sign in.
+Said plainly: a QR table-ordering app that presents entirely as your own brand (your logo, colors, and typography), animates food landing on the table, supports dine-in/pickup/delivery, and lets diners pay online via Moniepoint or at the counter.
 
-**What we do not claim.** Written down because a headline drifts toward these
-under pressure:
+**What we do not claim.** Written down because a headline drifts toward these under pressure:
 
-- Not a POS, and not a POS replacement. We do not touch the register.
-- Not a payments product. The diner pays at the counter, as they do today.
-- Not a loyalty programme. No points, no tiers, no cards.
-- Not a delivery platform. No marketplace, no commission, no riders.
+- Not a POS replacement. We integrate smoothly alongside your existing counter workflow.
+- Not a high-commission marketplace. Fixed ₦20,000/mo subscription + ₦100k setup + 1% platform convenience fee (passed to diner).
+- Not an account sign-up trap. Diners order without friction.
 
 The temptation is to soften "not a POS" into "works alongside your POS", which
 implies an integration we do not have. Say the smaller true thing.
@@ -75,7 +70,7 @@ they can tell a claim from a demonstration.
 |---|---|
 | Short declaratives. "Your menu, on their phone, in thirty seconds." | Feature lists with checkmarks. |
 | Concrete nouns — outlet, table, dish, counter, tablet. | Platform, solution, seamless, ecosystem. |
-| Naira, printed as `₦`, grouped: `₦50,000`. | Vague pricing, "contact us for a quote". |
+| Naira, printed as `₦`, grouped: `₦100,000`. | Vague pricing, "contact us for a quote". |
 | Name the competitors' category, not the competitors. | Comparison tables against named products. |
 | Nigerian English as it is written in business. | Manufactured local flavour, pidgin as decoration. |
 
@@ -181,36 +176,21 @@ normalisation pass for the contact line — and onboarding includes the shoot. D
 not water this sentence down to "supply your own photos". The whole animation
 rests on it.
 
-### 5.4 USP 2 — the Chidi walk
+### 5.4 USP 2 — Complete White-Labelling
 
-The strongest thing on the page for an owner, and the hardest to explain in the
-abstract. So it is not explained in the abstract. It is one diner, two outlets,
-told in three beats — the `PRD.md` acceptance test, rewritten for a buyer:
+The strongest selling point for owners who want to maintain their premium brand identity. 
 
-> **Monday. Ikeja.**
-> Chidi scans the code on table 12, orders jollof rice and chicken. Pays at the
-> counter, as usual.
+> **Your restaurant, your brand, your app.**
 >
-> **Three weeks later. Lekki.**
-> He scans a different code, at a different outlet, on the same phone.
->
-> **"Welcome back — that's your 4th order with us."**
-> His jollof is already on screen, one tap from the cart. He never made an
-> account. He never downloaded anything. He does not know we did this.
-
-Then the boundary, because an owner will ask and the honest answer sells:
-
-> Your history stays yours. A diner who orders at your outlets sees your orders,
-> at any of your outlets. They will never see them at another restaurant, and
-> another restaurant's diners will never arrive carrying someone else's.
-
-That last sentence is doing compliance work, not just marketing work. Keep it.
+> Plated doesn't look like Plated. It looks like you. We apply your high-res logo, your exact brand color palette, and your choice of curated restaurant typography directly into the ordering flow. Your diners interact with your brand, not ours.
 
 ### 5.5 Built for the way service actually goes
 
 The section the cheap tools cannot write, and the one an owner in Lagos will read
-twice. Three realities, three plain answers:
+twice. Four realities, four plain answers:
 
+> **Silent Diner Recognition.** Monday, Ikeja: Chidi orders jollof rice. Three weeks later, Lekki: He scans a different code, at a different outlet, on the same phone. *"Welcome back — that's your 4th order with us."* His jollof is already on screen. He never made an account. He never downloaded anything. (And his data is strictly siloed—he will never see that greeting at another brand's restaurant).
+>
 > **One table, one bill.** Four people at a table order from four phones. It is
 > one tab, with one total, settled once at the counter. Nobody is adding up
 > receipts.
@@ -255,10 +235,9 @@ while the tablet is still the best part of the offer.
 
 On the public landing page (`apps/landing`), we display **one public price baseline** to preserve high-converting quote intake:
 
-> **From ₦20,000 / month\***  
-> *\*Setup fee not included. Retainer scales based on business size & order volume.*  
->  
-> **No commission. No per-order cut. No percentage of anything. What you sell is yours.**
+> **₦20,000 / month per chain** + ₦100,000 setup  
+>
+> **Plus a flat 1% convenience fee added at checkout for online payments. You pay nothing in processing fees. Zero commission on cash and offline payments. What you sell is 100% yours.**
 
 **Dual-Mode Questionnaire Flow (`/quote` & Modal Popup):**
 - **Modal Popup**: Clicking any `"Get a Custom Quote"` button opens a smooth slide-over modal over the current viewport.
@@ -277,19 +256,18 @@ A 30-second intake modal for high-intent leads booking a live call:
 
 ### 5.9 Social Proof — Partner Logos & Owner Review Carousel
 
-- **Monochrome Partner Logo Strip**: Renders onboarded chain logos in single-tone `--graphite` on `--linen` to maintain visual luxury and avoid logo color clash.
-- **Framer-Style Owner Metrics Carousel**: Tactile `--porcelain` cards highlighting concrete business outcomes in `Martian Mono` (*"35% Faster Table Turnover"*, *"Zero Lost Orders During Peak Rush"*).
+- **Monochrome Partner Logo Strip**: Renders onboarded chain logos in single-tone `--text-tertiary` on `--surface-primary` to maintain visual luxury and avoid logo color clash.
+- **Framer-Style Owner Metrics Carousel**: Tactile `--surface-secondary` cards highlighting concrete business outcomes in `Geist` (*"35% Faster Table Turnover"*, *"Zero Lost Orders During Peak Rush"*).
 - **Conditional Render Gate**: Gated by a flag so placeholder/empty blocks are never rendered prior to Phase 7 pilot onboarding (`MARKETING.md §8`).
 
 ### 5.10 Interactive Accordion FAQ
 
-Smooth height-animating accordions (`--ease-ui` 200ms) answering the 6 primary owner objections:
+Smooth height-animating accordions (`--ease-ui` 200ms) answering the 5 primary owner objections:
 1. *POS Integration*: Does not replace your POS; staff key orders in from the tablet feed.
 2. *Payment Handling*: Diners pay at the counter as usual; orders accumulate into one tab.
 3. *Network & Power Outages*: Unsent orders queue on diner phones; tablet queue retains state with age timestamps.
 4. *Thermal Paper Failure*: Beeps physically; persistent **Reprint** button on every queue card.
 5. *Cross-Brand Privacy*: History is strictly siloed per `(device, chain)`.
-6. *Image Credits*: 10 free credits/month included; extra credits cost ₦1,000/credit.
 
 ### 5.11 Comprehensive 4-Column Architectural Footer
 
@@ -305,9 +283,8 @@ Smooth height-animating accordions (`--ease-ui` 200ms) answering the 6 primary o
 `apps/landing` shares a brand with `apps/diner`, not a codebase and not a motion
 system.
 
-**It borrows** the palette from `DESIGN_SYSTEM.md` §2 — `--ink` ground, `--linen`
-lit surfaces, `--brass` for structure — and the three faces from §4: Bricolage
-Grotesque for display, Instrument Sans for body, Martian Mono for prices. An
+**It borrows** the palette from `DESIGN_SYSTEM.md` §1 — `--surface-primary` ground, `--surface-secondary`
+lit surfaces, `--border-strong` for structure — and the single face from §2: Geist. An
 owner who sees the site and then the product should recognise the second from the
 first.
 
@@ -349,20 +326,19 @@ reduced motion the hero shows the captured footage's contact frame as a still,
 with the same headline over it. The page still makes its argument; it just makes
 it in one image.
 
-**Naira is written the app's way**, per `DESIGN_SYSTEM.md` §4: `₦50,000`, whole,
+**Naira is written the app's way**, per `DESIGN_SYSTEM.md` §4: `₦100,000`, whole,
 grouped, never with kobo. A price on this page and a price in the product should
 be typeset identically.
 
 **Accent colour on this site.** The marketing page has no chain, so it has no
 per-chain accent. It uses one fixed accent of our own, and that accent must not
 be a colour we would hand a client — a page that looks like one restaurant's
-brand reads as that restaurant's page. `--brass` is the safe default for
+brand reads as that restaurant's page. `--action-primary` (Burnt Orange) is the safe default for
 structure; the single CTA is where the fixed accent belongs.
 
 **Our mark, on the other hand, is not the accent.** This site and `apps/internal`
-are the only screens it appears on, and it renders `--graphite` on `--linen` per
-`DESIGN_SYSTEM.md` §3.3 — never brass, which fails contrast on this ground, and
-never the CTA accent, which would leave the page arguing in one colour. The word
+are the only screens it appears on, and it renders `--text-primary` on `--surface-primary` per
+`DESIGN_SYSTEM.md` §1 — never the CTA accent, which would leave the page arguing in one colour. The word
 **Plated** does the naming; the mark sits beside it and stays quiet.
 
 **And the page loads on a phone on mobile data**, because that is how a forwarded
@@ -375,25 +351,11 @@ What owners will ask, in roughly the order they ask it. These are for the demo
 call as much as for the page, and the page should already have answered the first
 three before the call happens.
 
-**"Why is this ₦500,000 when I can get a QR menu for ₦15,000?"** Because a
-₦15,000 QR menu is a PDF with a link, and this is a fitted installation: we come
-to you, shoot the menu, enter it, set up the tablet, the printer and the router,
-and train your staff. The animation is the part your customers see; the setup is
-the part you would otherwise have to do yourself. Say it in that order — the work
-first, the number second — and never argue that the cheap tool is bad. It is not
-bad. It is a different purchase.
+**"Why is setup ₦100,000 when I can get a simple QR menu for ₦15,000?"** Because a basic ₦15,000 QR menu is a static PDF with a link, whereas Plated is a full white-labelled system fitted to your brand: we configure your logo, brand colors, curated restaurant typography, set up the tablet, printer, and train your staff. Your diners get a delightful animated ordering experience, and you get flexible online/offline payments with a simple ₦20,000/mo subscription. The 1% platform fee is passed to your diners as a convenience fee, so you pay no processing costs.
 
-**"Do I have to change my POS?"** No. We do not touch it, integrate with it, or
-read from it. Orders arrive on a tablet; your staff key them into the register
-exactly as they do when someone orders at the counter. That is a real cost —
-double entry — and it is the honest trade for not being a POS migration
-(`PRD.md` § Explicitly OUT of MVP scope).
+**"Do I have to change my POS?"** No. We do not touch it or replace it. Orders arrive on a tablet; your staff fulfill them and handle receipts seamlessly.
 
-**"How do my customers pay?"** At the counter, as they do now. The app takes the
-order, not the money. Everything a table orders adds up into one tab and your
-staff close it once. When payments arrive they will be a separate decision, and
-`ARCHITECTURE.md` §4.3 already constrains how — it will not hang off the device
-token.
+**"How do my customers pay?"** Flexible: they can pay online via **Moniepoint** (with a 1% convenience fee automatically added and split to us) or pay offline at the counter via Cash, POS, or Bank Transfer. Staff confirms payment directly on the counter tablet app.
 
 **"What happens when the light goes?"** The tablet holds the last orders it
 received and shows how old they are, so nobody is staring at a blank screen. The
@@ -427,7 +389,7 @@ than being discovered — an owner who hears it from us first does not treat it 
 a defect when they see it.
 
 **"Can I see my competitors' customers?"** No, and neither can they see yours.
-§5.4's boundary sentence is the answer, verbatim.
+§5.5's boundary sentence is the answer, verbatim.
 
 **"What about the data protection law?"** `PRD.md` open question 5 and
 **unresolved**. The mechanic is defensible — no names, no numbers, and the link
@@ -487,7 +449,7 @@ offers to bring their menu to the call.
    mechanic and refuses to invent the sales answer; whoever closes the PRD
    question should come back and write the real one here.
 4. **Folded.** `PRD.md` closed the multi-outlet curve question when the retainer
-   went flat. §5.7 now states one per-outlet number that does not move.
+   went flat. §5.7 now states one per-chain number that does not move.
 5. **NDPA notice.** `PRD.md` open question 5. §7 defers it deliberately. Whatever
    the formal position turns out to be, it will need a plain-language line on this
    page, not only in a policy nobody opens.

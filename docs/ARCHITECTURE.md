@@ -25,7 +25,7 @@ schema name. In the data model there are only chains and outlets.
 | Database | Supabase Postgres |
 | Server logic | Supabase Edge Functions (Deno) |
 | Hosting | Vercel (diner, restaurant, internal, landing) + Supabase cloud |
-| Payments | None in MVP. Diner pays at the counter. |
+| Payments | Online via **Moniepoint** (1% fee split passed to diner) or Offline at Counter. |
 | Money | `bigint` minor units — **kobo** for NGN. Never float, never `int4`. |
 
 Four Vercel projects off one repo, deployed independently. `apps/diner` must be
@@ -159,7 +159,7 @@ suffix is what stops a float creeping in three phases from now.
 | `name` | text | |
 | `slug` | text unique | |
 | `accent_hex` | text | Validated and corrected at write time per `DESIGN_SYSTEM.md` §3. |
-| `accent_ink` | text | Computed, never authored. |
+
 | `display_name` | text | What the diner sees on the venue welcome. Defaults to `name`. |
 | `logo_url` | text | Screen asset, uploaded by the chain. |
 | `logo_mono_url` | text | Computed: 384px 1-bit derivative for the 58mm receipt. Never authored — see `API_CONTRACTS.md` §7.4. |
@@ -431,8 +431,8 @@ is no role value on a restaurant login that can escalate into platform access.
 ### subscriptions
 
 One per chain. `id`, `chain_id` fk, `tier` (`tablet` \| `software_only`),
-`setup_fee_minor`, `retainer_minor` (quote-based, starting from ₦20,000/mo), `outlet_count`, `status` (`active` \|
-`past_due` \| `suspended`), `paystack_customer_id` text null, `paystack_subscription_code` text null, `paystack_email` text null, `current_period_start`, `current_period_end`,
+`setup_fee_minor`, `retainer_minor` (flat ₦20,000/mo), `outlet_count`, `status` (`active` \|
+`past_due` \| `suspended`), `moniepoint_customer_id` text null, `moniepoint_subscription_code` text null, `moniepoint_email` text null, `current_period_start`, `current_period_end`,
 `grace_until`, `onboarding_until`.
 
 `onboarding_until` is the 30-day unlimited-image window from `PRD.md`. Inside it,
@@ -441,7 +441,7 @@ processing deducts nothing.
 `grace_until` is what `apps/internal` acts on: suspension is a decision someone
 makes after a deadline passes, never an automatic consequence of a date.
 
-Paystack customer and subscription code fields allow managers/CEOs to connect card and renew SaaS retainer directly in `apps/restaurant`.
+Moniepoint customer and subscription code fields allow managers/CEOs to connect card and renew SaaS retainer directly in `apps/restaurant`.
 
 ### announcements
 

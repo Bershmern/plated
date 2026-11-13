@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -13,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-porcelain text-graphite antialiased min-h-screen">
+      <body className={`${GeistSans.variable} ${GeistMono.variable} bg-background text-foreground antialiased min-h-screen`}>
         {children}
       </body>
     </html>

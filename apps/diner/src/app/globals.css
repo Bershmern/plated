@@ -1,5 +1,4 @@
-@import '../../../../packages/ui/src/tokens.css';
-
+@import "@plated/ui/tokens.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,9 +13,4 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
-}
-
-body {
-  background-color: #0B0F19;
-  color: #F8FAFC;
 }

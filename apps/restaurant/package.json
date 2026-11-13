@@ -12,14 +12,15 @@
   "dependencies": {
     "@plated/db": "workspace:*",
     "@plated/ui": "workspace:*",
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.46.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.454.0",
     "next": "^14.2.16",
+    "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tailwind-merge": "^2.5.4",
-    "@supabase/supabase-js": "^2.46.1",
-    "@sentry/nextjs": "^8.38.0"
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
     "@types/node": "^20.17.6",

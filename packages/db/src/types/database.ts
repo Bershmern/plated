@@ -515,9 +515,9 @@ export interface Database {
           retainer_minor: number;
           outlet_count: number;
           status: 'active' | 'past_due' | 'suspended';
-          paystack_customer_id: string | null;
-          paystack_subscription_code: string | null;
-          paystack_email: string | null;
+          moniepoint_customer_id: string | null;
+          moniepoint_subscription_code: string | null;
+          moniepoint_email: string | null;
           current_period_start: string;
           current_period_end: string;
           grace_until: string | null;
@@ -531,9 +531,9 @@ export interface Database {
           retainer_minor: number;
           outlet_count: number;
           status?: 'active' | 'past_due' | 'suspended';
-          paystack_customer_id?: string | null;
-          paystack_subscription_code?: string | null;
-          paystack_email?: string | null;
+          moniepoint_customer_id?: string | null;
+          moniepoint_subscription_code?: string | null;
+          moniepoint_email?: string | null;
           current_period_start: string;
           current_period_end: string;
           grace_until?: string | null;
@@ -547,9 +547,9 @@ export interface Database {
           retainer_minor?: number;
           outlet_count?: number;
           status?: 'active' | 'past_due' | 'suspended';
-          paystack_customer_id?: string | null;
-          paystack_subscription_code?: string | null;
-          paystack_email?: string | null;
+          moniepoint_customer_id?: string | null;
+          moniepoint_subscription_code?: string | null;
+          moniepoint_email?: string | null;
           current_period_start?: string;
           current_period_end?: string;
           grace_until?: string | null;
